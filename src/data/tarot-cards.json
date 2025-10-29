@@ -1,0 +1,248 @@
+[
+  {
+    "number": 0,
+    "name": "The Fool",
+    "keywords": ["beginnings", "innocence", "spontaneity", "faith"],
+    "shadow_keywords": ["recklessness", "naivety", "chaos", "folly"],
+    "archetypal_theme": "The eternal beginner; leap of faith; openness to experience.",
+    "symbolic_pair": "The World",
+    "element": "Air",
+    "planet_or_sign": "Uranus",
+    "img_src": "/tarot-cards/sm_RWSa-T-00.webp"
+  },
+  {
+    "number": 1,
+    "name": "The Magician",
+    "keywords": ["willpower", "manifestation", "skill", "resourcefulness"],
+    "shadow_keywords": ["manipulation", "deception", "ego"],
+    "archetypal_theme": "The active creator; mastery of elements; translating spirit into matter.",
+    "symbolic_pair": "The High Priestess",
+    "element": "Air",
+    "planet_or_sign": "Mercury",
+    "img_src": "/tarot-cards/sm_RWSa-T-01.webp"
+  },
+  {
+    "number": 2,
+    "name": "The High Priestess",
+    "keywords": ["intuition", "mystery", "inner wisdom"],
+    "shadow_keywords": [
+      "secrets",
+      "repression",
+      "disconnection from intuition"
+    ],
+    "archetypal_theme": "The receptive seer; mystery of the unconscious; divine feminine intuition.",
+    "symbolic_pair": "The Magician",
+    "element": "Water",
+    "planet_or_sign": "Moon",
+    "img_src": "/tarot-cards/sm_RWSa-T-02.webp"
+  },
+  {
+    "number": 3,
+    "name": "The Empress",
+    "keywords": ["nurturing", "abundance", "creativity", "fertility"],
+    "shadow_keywords": ["smothering", "overindulgence", "dependency"],
+    "archetypal_theme": "The Great Mother; creative abundance and love of life.",
+    "symbolic_pair": "The Emperor",
+    "element": "Earth",
+    "planet_or_sign": "Venus",
+    "img_src": "/tarot-cards/sm_RWSa-T-03.webp"
+  },
+  {
+    "number": 4,
+    "name": "The Emperor",
+    "keywords": ["authority", "structure", "stability", "control"],
+    "shadow_keywords": ["rigidity", "domination", "tyranny"],
+    "archetypal_theme": "The Father; mastery of order and protection through structure.",
+    "symbolic_pair": "The Empress",
+    "element": "Fire",
+    "planet_or_sign": "Aries",
+    "img_src": "/tarot-cards/sm_RWSa-T-04.webp"
+  },
+  {
+    "number": 5,
+    "name": "The Hierophant",
+    "keywords": ["tradition", "spiritual wisdom", "guidance"],
+    "shadow_keywords": ["dogma", "rigidity", "conformity"],
+    "archetypal_theme": "The spiritual teacher; sacred traditions and transmission of wisdom.",
+    "symbolic_pair": "The High Priestess",
+    "element": "Earth",
+    "planet_or_sign": "Taurus",
+    "img_src": "/tarot-cards/sm_RWSa-T-05.webp"
+  },
+  {
+    "number": 6,
+    "name": "The Lovers",
+    "keywords": ["union", "choice", "love", "alignment"],
+    "shadow_keywords": ["imbalance", "indecision", "disharmony"],
+    "archetypal_theme": "The synthesis of dualities through love and conscious choice.",
+    "symbolic_pair": "The Devil",
+    "element": "Air",
+    "planet_or_sign": "Gemini",
+    "img_src": "/tarot-cards/sm_RWSa-T-06.webp"
+  },
+  {
+    "number": 7,
+    "name": "The Chariot",
+    "keywords": ["determination", "willpower", "triumph"],
+    "shadow_keywords": ["aggression", "lack of direction", "ego-driven"],
+    "archetypal_theme": "The disciplined self; mastery of inner drives toward victory.",
+    "symbolic_pair": "Strength",
+    "element": "Water",
+    "planet_or_sign": "Cancer",
+    "img_src": "/tarot-cards/sm_RWSa-T-07.webp"
+  },
+  {
+    "number": 8,
+    "name": "Strength",
+    "keywords": ["courage", "patience", "inner strength"],
+    "shadow_keywords": ["self-doubt", "fear", "impulsiveness"],
+    "archetypal_theme": "Gentle mastery of instinct through compassion and courage.",
+    "symbolic_pair": "The Chariot",
+    "element": "Fire",
+    "planet_or_sign": "Leo",
+    "img_src": "/tarot-cards/sm_RWSa-T-08.webp"
+  },
+  {
+    "number": 9,
+    "name": "The Hermit",
+    "keywords": ["introspection", "solitude", "inner guidance"],
+    "shadow_keywords": ["isolation", "withdrawal", "loneliness"],
+    "archetypal_theme": "The wise seeker; illumination through solitude and reflection.",
+    "symbolic_pair": "The Sun",
+    "element": "Earth",
+    "planet_or_sign": "Virgo",
+    "img_src": "/tarot-cards/sm_RWSa-T-09.webp"
+  },
+  {
+    "number": 10,
+    "name": "Wheel of Fortune",
+    "keywords": ["cycles", "fate", "luck", "change"],
+    "shadow_keywords": ["resistance", "fatalism", "chaos"],
+    "archetypal_theme": "The cyclical nature of life; destiny and chance.",
+    "symbolic_pair": "Justice",
+    "element": "Fire",
+    "planet_or_sign": "Jupiter",
+    "img_src": "/tarot-cards/sm_RWSa-T-10.webp"
+  },
+  {
+    "number": 11,
+    "name": "Justice",
+    "keywords": ["truth", "fairness", "karma"],
+    "shadow_keywords": ["bias", "injustice", "dishonesty"],
+    "archetypal_theme": "Balance, accountability, and ethical discernment.",
+    "symbolic_pair": "Wheel of Fortune",
+    "element": "Air",
+    "planet_or_sign": "Libra",
+    "img_src": "/tarot-cards/sm_RWSa-T-11.webp"
+  },
+  {
+    "number": 12,
+    "name": "The Hanged Man",
+    "keywords": ["surrender", "perspective", "letting go"],
+    "shadow_keywords": ["victimhood", "inaction", "martyrdom"],
+    "archetypal_theme": "Transformation through surrender and new perspective.",
+    "symbolic_pair": "Death",
+    "element": "Water",
+    "planet_or_sign": "Neptune",
+    "img_src": "/tarot-cards/sm_RWSa-T-12.webp"
+  },
+  {
+    "number": 13,
+    "name": "Death",
+    "keywords": ["endings", "transformation", "rebirth"],
+    "shadow_keywords": ["resistance", "fear of change"],
+    "archetypal_theme": "The great transition; the death of the old to birth the new.",
+    "symbolic_pair": "The Hanged Man",
+    "element": "Water",
+    "planet_or_sign": "Scorpio",
+    "img_src": "/tarot-cards/sm_RWSa-T-13.webp"
+  },
+  {
+    "number": 14,
+    "name": "Temperance",
+    "keywords": ["balance", "moderation", "healing"],
+    "shadow_keywords": ["excess", "imbalance"],
+    "archetypal_theme": "Alchemy and integration of opposites; divine flow.",
+    "symbolic_pair": "The Devil",
+    "element": "Fire",
+    "planet_or_sign": "Sagittarius",
+    "img_src": "/tarot-cards/sm_RWSa-T-14.webp"
+  },
+  {
+    "number": 15,
+    "name": "The Devil",
+    "keywords": ["bondage", "materialism", "shadow self"],
+    "shadow_keywords": ["addiction", "entrapment", "temptation"],
+    "archetypal_theme": "Confronting illusion and reclaiming inner power.",
+    "symbolic_pair": "The Lovers",
+    "element": "Earth",
+    "planet_or_sign": "Capricorn",
+    "img_src": "/tarot-cards/sm_RWSa-T-15.webp"
+  },
+  {
+    "number": 16,
+    "name": "The Tower",
+    "keywords": ["revelation", "sudden change", "awakening"],
+    "shadow_keywords": ["destruction", "resistance", "ego collapse"],
+    "archetypal_theme": "The lightning strike of truth; liberation from illusion.",
+    "symbolic_pair": "The Star",
+    "element": "Fire",
+    "planet_or_sign": "Mars",
+    "img_src": "/tarot-cards/sm_RWSa-T-16.webp"
+  },
+  {
+    "number": 17,
+    "name": "The Star",
+    "keywords": ["hope", "healing", "inspiration"],
+    "shadow_keywords": ["despair", "disillusionment"],
+    "archetypal_theme": "Faith and renewal after upheaval; the soul\u2019s guidance.",
+    "symbolic_pair": "The Tower",
+    "element": "Air",
+    "planet_or_sign": "Aquarius",
+    "img_src": "/tarot-cards/sm_RWSa-T-17.webp"
+  },
+  {
+    "number": 18,
+    "name": "The Moon",
+    "keywords": ["illusion", "intuition", "dreams"],
+    "shadow_keywords": ["confusion", "fear", "deception"],
+    "archetypal_theme": "The mysterious night of the soul; navigating the unconscious.",
+    "symbolic_pair": "The Sun",
+    "element": "Water",
+    "planet_or_sign": "Pisces",
+    "img_src": "/tarot-cards/sm_RWSa-T-18.webp"
+  },
+  {
+    "number": 19,
+    "name": "The Sun",
+    "keywords": ["joy", "success", "vitality"],
+    "shadow_keywords": ["arrogance", "burnout"],
+    "archetypal_theme": "Radiance and clarity; celebration of life\u2019s essence.",
+    "symbolic_pair": "The Moon",
+    "element": "Fire",
+    "planet_or_sign": "Sun",
+    "img_src": "/tarot-cards/sm_RWSa-T-19.webp"
+  },
+  {
+    "number": 20,
+    "name": "Judgement",
+    "keywords": ["awakening", "forgiveness", "renewal"],
+    "shadow_keywords": ["self-criticism", "denial"],
+    "archetypal_theme": "The call to higher consciousness; reconciliation and rebirth.",
+    "symbolic_pair": "Justice",
+    "element": "Fire",
+    "planet_or_sign": "Pluto",
+    "img_src": "/tarot-cards/sm_RWSa-T-20.webp"
+  },
+  {
+    "number": 21,
+    "name": "The World",
+    "keywords": ["completion", "wholeness", "integration"],
+    "shadow_keywords": ["stagnation", "incompletion"],
+    "archetypal_theme": "Fulfillment and unity; the return to source.",
+    "symbolic_pair": "The Fool",
+    "element": "Earth",
+    "planet_or_sign": "Saturn",
+    "img_src": "/tarot-cards/sm_RWSa-T-21.webp"
+  }
+]
