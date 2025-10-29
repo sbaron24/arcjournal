@@ -47,6 +47,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        celestial: "hsl(var(--celestial))",
+        mystic: "hsl(var(--mystic))",
+        gold: "hsl(var(--gold))",
+        shadow: "hsl(var(--shadow))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,10 +84,29 @@ export default {
             height: "0",
           },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "reveal": {
+          "0%": { transform: "rotateY(180deg)", opacity: "0" },
+          "100%": { transform: "rotateY(0deg)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "float": "float 3s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
+        "reveal": "reveal 0.6s ease-out forwards",
+      },
+      fontFamily: {
+        serif: ["Cinzel", "serif"],
+        sans: ["Inter", "sans-serif"],
       },
     },
   },
