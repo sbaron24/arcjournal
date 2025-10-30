@@ -17,24 +17,42 @@ export type Database = {
       reflections: {
         Row: {
           created_at: string
+          generated_prompt: string | null
           id: string
+          question: string | null
           reflection: string
+          selected_element: string | null
+          selected_keywords: string[] | null
+          selected_planet_sign: string | null
+          selected_shadow_keywords: string[] | null
           tarot_card_id: string
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          generated_prompt?: string | null
           id?: string
+          question?: string | null
           reflection: string
+          selected_element?: string | null
+          selected_keywords?: string[] | null
+          selected_planet_sign?: string | null
+          selected_shadow_keywords?: string[] | null
           tarot_card_id: string
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          generated_prompt?: string | null
           id?: string
+          question?: string | null
           reflection?: string
+          selected_element?: string | null
+          selected_keywords?: string[] | null
+          selected_planet_sign?: string | null
+          selected_shadow_keywords?: string[] | null
           tarot_card_id?: string
           updated_at?: string
           user_id?: string

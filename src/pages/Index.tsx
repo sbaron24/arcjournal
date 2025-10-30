@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { TarotCard } from "@/components/TarotCard";
 import { ReflectionForm } from "@/components/ReflectionForm";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Sparkles, BookOpen, User, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +25,7 @@ const temperanceData = {
 const Index = () => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [cardId, setCardId] = useState<string | null>(null);
+  const [question, setQuestion] = useState("");
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -46,6 +49,7 @@ const Index = () => {
 
   const handleReset = () => {
     setIsRevealed(false);
+    setQuestion("");
   };
 
   const handleSignOut = async () => {
@@ -118,6 +122,23 @@ const Index = () => {
           </p>
         </div>
 
+        {!isRevealed && (
+          <div className="w-full max-w-md mb-8 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="question" className="text-foreground">
+                What question brings you here today?
+              </Label>
+              <Input
+                id="question"
+                placeholder="Enter your question or intention..."
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className="border-mystic/30 focus:border-mystic/60"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="mb-8">
           <TarotCard 
             data={isRevealed ? temperanceData : undefined}
@@ -130,6 +151,8 @@ const Index = () => {
           <div className="mt-8 w-full flex flex-col items-center gap-6">
             <ReflectionForm 
               cardId={cardId}
+              question={question}
+              cardData={temperanceData}
               onSuccess={() => {
                 toast({
                   title: "Reflection Saved",
