@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { TarotCard } from "@/components/TarotCard";
+import { ReflectionForm } from "@/components/ReflectionForm";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, BookOpen, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import temperanceImage from "@/assets/temperance-card.jpg";
 
 const temperanceData = {
@@ -17,9 +22,41 @@ const temperanceData = {
 
 const Index = () => {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [cardId, setCardId] = useState<string | null>(null);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Fetch the Temperance card ID
+    const fetchCardId = async () => {
+      const { data } = await supabase
+        .from('tarot_cards')
+        .select('id')
+        .eq('name', 'Temperance')
+        .single();
+      
+      if (data) {
+        setCardId(data.id);
+      }
+    };
+    
+    fetchCardId();
+  }, []);
 
   const handleReset = () => {
     setIsRevealed(false);
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -29,6 +66,39 @@ const Index = () => {
       <div className="fixed inset-0 opacity-30">
         <div className="absolute top-20 left-20 w-64 h-64 bg-mystic/30 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-celestial/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+      </div>
+
+      {/* Top navigation */}
+      <div className="relative z-20 container mx-auto px-4 py-4 flex justify-end gap-2">
+        {user ? (
+          <>
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/journal')}
+              className="text-foreground hover:text-gold"
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              Journal
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={handleSignOut}
+              className="text-foreground hover:text-gold"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/auth')}
+            className="text-foreground hover:text-gold"
+          >
+            <User className="mr-2 h-4 w-4" />
+            Sign In
+          </Button>
+        )}
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-12 min-h-screen flex flex-col items-center justify-center">
@@ -56,14 +126,48 @@ const Index = () => {
           />
         </div>
 
-        {isRevealed && (
-          <Button 
-            onClick={handleReset}
-            variant="outline"
-            className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
-          >
-            Draw Another Card
-          </Button>
+        {isRevealed && user && cardId && (
+          <div className="mt-8 w-full flex flex-col items-center gap-6">
+            <ReflectionForm 
+              cardId={cardId}
+              onSuccess={() => {
+                toast({
+                  title: "Reflection Saved",
+                  description: "Your insight has been recorded in your journal",
+                });
+              }}
+            />
+            <Button 
+              onClick={handleReset}
+              variant="outline"
+              className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+            >
+              Draw Another Card
+            </Button>
+          </div>
+        )}
+
+        {isRevealed && !user && (
+          <div className="mt-8 text-center space-y-4">
+            <p className="text-muted-foreground">
+              Sign in to save your reflections
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button 
+                onClick={() => navigate('/auth')}
+                className="bg-mystic hover:bg-mystic/80"
+              >
+                Sign In
+              </Button>
+              <Button 
+                onClick={handleReset}
+                variant="outline"
+                className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+              >
+                Draw Another Card
+              </Button>
+            </div>
+          </div>
         )}
 
         <div className="mt-16 text-center text-muted-foreground text-sm max-w-lg">
