@@ -14,30 +14,35 @@ serve(async (req) => {
   }
 
   try {
-    const { question, cardName, keywords, shadowKeywords, element, planetSign, description } = await req.json();
+    const { question, cardName, selectedKeywords, selectedShadowKeywords, selectedElement, selectedPlanetSign, description } = await req.json();
 
-    console.log('Generating prompt for:', { cardName, question });
+    console.log('Generating prompt for:', { cardName, question, selectedKeywords, selectedShadowKeywords, selectedElement, selectedPlanetSign });
 
     const systemPrompt = `You are a mystical tarot guide who creates personalized, meaningful prompts for reflection. 
-Based on the tarot card drawn and the user's question, craft a single thoughtful prompt that:
-- Weaves together the card's themes with their question
-- Encourages deep personal reflection
+Based on the tarot card drawn, the user's question, and the specific themes they selected as resonating with them, craft a single thoughtful prompt that:
+- Weaves together the selected card themes with their question
+- Encourages deep personal reflection based on what resonated with them
 - Uses poetic but accessible language
 - Is 2-3 sentences long
 - Feels personal and insightful
 
-Keep the tone mystical but grounded.`;
+Keep the tone mystical but grounded. Focus specifically on the themes the user selected.`;
+
+    const selectedThemes = [];
+    if (selectedKeywords?.length) selectedThemes.push(`Keywords: ${selectedKeywords.join(', ')}`);
+    if (selectedShadowKeywords?.length) selectedThemes.push(`Shadow Keywords: ${selectedShadowKeywords.join(', ')}`);
+    if (selectedElement) selectedThemes.push(`Element: ${selectedElement}`);
+    if (selectedPlanetSign) selectedThemes.push(`Planet/Sign: ${selectedPlanetSign}`);
 
     const userPrompt = `Card: ${cardName}
 Description: ${description}
-Keywords: ${keywords.join(', ')}
-Shadow Keywords: ${shadowKeywords.join(', ')}
-Element: ${element || 'Unknown'}
-Planet/Sign: ${planetSign || 'Unknown'}
 
 User's Question: "${question}"
 
-Create a personalized reflection prompt that connects this card's themes to their question.`;
+Selected Themes that resonated with the user:
+${selectedThemes.length > 0 ? selectedThemes.join('\n') : 'No specific themes selected yet'}
+
+Create a personalized reflection prompt that connects these selected themes to their question.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

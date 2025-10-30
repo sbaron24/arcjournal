@@ -36,15 +36,9 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [selectedShadowKeywords, setSelectedShadowKeywords] = useState<string[]>([]);
-  const [selectedElement, setSelectedElement] = useState(cardData.element);
-  const [selectedPlanetSign, setSelectedPlanetSign] = useState(cardData.planetSign);
+  const [selectedElement, setSelectedElement] = useState<string | null>(null);
+  const [selectedPlanetSign, setSelectedPlanetSign] = useState<string | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (question) {
-      generatePrompt();
-    }
-  }, []);
 
   const generatePrompt = async () => {
     if (!question.trim()) {
@@ -62,10 +56,10 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
         body: {
           question,
           cardName: cardData.name,
-          keywords: cardData.keywords,
-          shadowKeywords: cardData.shadowKeywords,
-          element: cardData.element,
-          planetSign: cardData.planetSign,
+          selectedKeywords,
+          selectedShadowKeywords,
+          selectedElement,
+          selectedPlanetSign,
           description: cardData.description,
         },
       });
@@ -95,6 +89,14 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
     setSelectedShadowKeywords(prev =>
       prev.includes(keyword) ? prev.filter(k => k !== keyword) : [...prev, keyword]
     );
+  };
+
+  const toggleElement = () => {
+    setSelectedElement(prev => prev === cardData.element ? null : cardData.element);
+  };
+
+  const togglePlanetSign = () => {
+    setSelectedPlanetSign(prev => prev === cardData.planetSign ? null : cardData.planetSign);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -159,32 +161,10 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-2xl">
-      {/* Generated Prompt Section */}
-      <div className="space-y-3 p-6 bg-card/50 rounded-lg border border-mystic/20">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-5 h-5 text-gold" />
-          <Label className="text-foreground font-serif text-lg">Your Personalized Reflection Prompt</Label>
-        </div>
-        {isGenerating ? (
-          <p className="text-muted-foreground italic">Weaving the cards wisdom with your question...</p>
-        ) : generatedPrompt ? (
-          <p className="text-foreground leading-relaxed">{generatedPrompt}</p>
-        ) : (
-          <Button
-            type="button"
-            onClick={generatePrompt}
-            variant="outline"
-            className="border-mystic/50"
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            Generate Personalized Prompt
-          </Button>
-        )}
-      </div>
-
       {/* Card Attribute Selections */}
       <div className="space-y-4">
-        <Label className="text-foreground">Select Resonating Themes</Label>
+        <Label className="text-foreground font-serif text-lg">Select Themes That Resonate With You</Label>
+        <p className="text-sm text-muted-foreground">Choose the keywords and themes from this card that speak to your question</p>
         
         <div className="space-y-3">
           <div>
@@ -222,18 +202,52 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground mb-2">Element</p>
-              <Badge variant="secondary" className="w-full justify-center">
-                {selectedElement}
+              <Badge 
+                variant={selectedElement ? "default" : "outline"}
+                className="w-full justify-center cursor-pointer transition-colors"
+                onClick={toggleElement}
+              >
+                {cardData.element}
               </Badge>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Planet/Sign</p>
-              <Badge variant="secondary" className="w-full justify-center">
-                {selectedPlanetSign}
+              <Badge 
+                variant={selectedPlanetSign ? "default" : "outline"}
+                className="w-full justify-center cursor-pointer transition-colors"
+                onClick={togglePlanetSign}
+              >
+                {cardData.planetSign}
               </Badge>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Generated Prompt Section */}
+      <div className="space-y-3 p-6 bg-card/50 rounded-lg border border-mystic/20">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-5 h-5 text-gold" />
+          <Label className="text-foreground font-serif text-lg">AI-Generated Reflection Prompt (Optional)</Label>
+        </div>
+        <p className="text-sm text-muted-foreground mb-3">
+          Generate a personalized prompt based on your question and selected themes, or write your own reflection below
+        </p>
+        {isGenerating ? (
+          <p className="text-muted-foreground italic">Weaving the card's wisdom with your question...</p>
+        ) : generatedPrompt ? (
+          <p className="text-foreground leading-relaxed">{generatedPrompt}</p>
+        ) : (
+          <Button
+            type="button"
+            onClick={generatePrompt}
+            variant="outline"
+            className="border-mystic/50"
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Generate Personalized Prompt
+          </Button>
+        )}
       </div>
 
       {/* Reflection Input */}
