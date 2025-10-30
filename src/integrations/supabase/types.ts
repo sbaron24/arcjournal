@@ -14,7 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      reflections: {
+        Row: {
+          created_at: string
+          id: string
+          reflection: string
+          tarot_card_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reflection: string
+          tarot_card_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reflection?: string
+          tarot_card_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reflections_tarot_card_id_fkey"
+            columns: ["tarot_card_id"]
+            isOneToOne: false
+            referencedRelation: "tarot_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tarot_cards: {
+        Row: {
+          archetypal_theme: string
+          created_at: string
+          element: string | null
+          id: string
+          img_src: string
+          keywords: string
+          name: string
+          number: number
+          planet_or_sign: string | null
+          shadow_keywords: string
+          symbolic_pair: string
+        }
+        Insert: {
+          archetypal_theme: string
+          created_at?: string
+          element?: string | null
+          id?: string
+          img_src: string
+          keywords: string
+          name: string
+          number: number
+          planet_or_sign?: string | null
+          shadow_keywords: string
+          symbolic_pair: string
+        }
+        Update: {
+          archetypal_theme?: string
+          created_at?: string
+          element?: string | null
+          id?: string
+          img_src?: string
+          keywords?: string
+          name?: string
+          number?: number
+          planet_or_sign?: string | null
+          shadow_keywords?: string
+          symbolic_pair?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
