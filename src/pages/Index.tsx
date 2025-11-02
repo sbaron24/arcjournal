@@ -23,10 +23,13 @@ const hangedManData = {
   planetSign: "Neptune",
   imageUrl: hangedManImage,
   text: {
-    essence: "Suspended between worlds, the Hanged Man embodies the paradox of release as progress. He teaches that true movement often begins in stillness — that growth is not always forward, but inward. Through voluntary surrender, a new vantage emerges: the ability to see life not as something to master, but to meet with openness. This archetype asks you to pause long enough for wisdom to turn itself right-side up within you.",
-    symbolicLanguage: "The inverted figure reflects the reorientation of perception.\nThe halo of light symbolizes illumination born from surrender.\nThe tree of life represents the axis between heaven and earth — the living cross of experience.\nThe serene face reminds us that acceptance, not struggle, reveals peace.\nEvery detail of the card whispers: what you resist binds you; what you yield to transforms you.",
-    shadowsChallenges: "When this energy turns shadowed, we cling to control or mistake surrender for defeat. Inaction can disguise itself as patience; victimhood can masquerade as spiritual detachment. The challenge is discerning when to let go — and when \"letting go\" has become avoidance. The Hanged Man calls you to surrender consciously, not passively — to participate in your own unbinding."
-  }
+    essence:
+      "Suspended between worlds, the Hanged Man embodies the paradox of release as progress. He teaches that true movement often begins in stillness — that growth is not always forward, but inward. Through voluntary surrender, a new vantage emerges: the ability to see life not as something to master, but to meet with openness. This archetype asks you to pause long enough for wisdom to turn itself right-side up within you.",
+    symbolicLanguage:
+      "The inverted figure reflects the reorientation of perception.\nThe halo of light symbolizes illumination born from surrender.\nThe tree of life represents the axis between heaven and earth — the living cross of experience.\nThe serene face reminds us that acceptance, not struggle, reveals peace.\nEvery detail of the card whispers: what you resist binds you; what you yield to transforms you.",
+    shadowsChallenges:
+      'When this energy turns shadowed, we cling to control or mistake surrender for defeat. Inaction can disguise itself as patience; victimhood can masquerade as spiritual detachment. The challenge is discerning when to let go — and when "letting go" has become avoidance. The Hanged Man calls you to surrender consciously, not passively — to participate in your own unbinding.',
+  },
 };
 
 const Index = () => {
@@ -131,9 +134,7 @@ const Index = () => {
                 <Label htmlFor="question" className="text-foreground">
                   What question do you seek guidance on? (Optional)
                 </Label>
-                <p className="text-sm text-muted-foreground">
-                  You may draw a card with or without a question
-                </p>
+                <p className="text-sm text-muted-foreground">You may draw a card with or without a question</p>
                 <Input
                   id="question"
                   placeholder="Enter your question or intention..."
