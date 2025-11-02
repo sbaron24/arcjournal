@@ -134,7 +134,6 @@ const Index = () => {
                 <Label htmlFor="question" className="text-foreground">
                   What question do you seek guidance on? (Optional)
                 </Label>
-                <p className="text-sm text-muted-foreground">You may draw a card with or without a question</p>
                 <Input
                   id="question"
                   placeholder="Enter your question or intention..."
