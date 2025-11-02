@@ -76,7 +76,7 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
 
           const chunk = decoder.decode(value, { stream: true });
           buffer += chunk;
-          
+          console.log("SEAN BUFFER: ", chunk)
           const lines = buffer.split('\n');
           // Keep the last partial line in buffer
           buffer = lines.pop() || '';
