@@ -23,6 +23,8 @@ export const CardTextDisplay = ({ cardName, cardText, onContinue }: CardTextDisp
       if (!highlights.includes(selectedText)) {
         setHighlights([...highlights, selectedText]);
       }
+      // Clear the selection after adding to highlights
+      selection?.removeAllRanges();
     }
   };
 
