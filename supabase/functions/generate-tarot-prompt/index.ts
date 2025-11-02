@@ -68,6 +68,7 @@ Create a personalized reflection prompt that connects what resonated with the us
         ],
         temperature: 0.8,
         max_tokens: 200,
+        stream: true,
       }),
     });
 
@@ -77,13 +78,14 @@ Create a personalized reflection prompt that connects what resonated with the us
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const generatedPrompt = data.choices[0].message.content;
-
-    console.log('Generated prompt:', generatedPrompt);
-
-    return new Response(JSON.stringify({ generatedPrompt, prompt: generatedPrompt }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    // Return the stream directly
+    return new Response(response.body, {
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
     });
   } catch (error) {
     console.error('Error in generate-tarot-prompt function:', error);

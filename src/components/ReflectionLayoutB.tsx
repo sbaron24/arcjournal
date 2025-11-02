@@ -34,17 +34,57 @@ export const ReflectionLayoutB = ({
 
   const generatePrompt = async () => {
     setIsGenerating(true);
+    setGeneratedPrompt('');
     try {
-      const { data, error } = await supabase.functions.invoke('generate-tarot-prompt', {
-        body: {
-          cardName,
-          question: question || '',
-          selectedHighlights: highlights,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-tarot-prompt`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            cardName,
+            question: question || '',
+            selectedHighlights: highlights,
+          }),
+        }
+      );
 
-      if (error) throw error;
-      setGeneratedPrompt(data.prompt);
+      if (!response.ok) throw new Error('Failed to generate prompt');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  accumulatedText += content;
+                  setGeneratedPrompt(accumulatedText);
+                }
+              } catch (e) {
+                // Skip invalid JSON
+              }
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error('Error generating prompt:', error);
       toast({
