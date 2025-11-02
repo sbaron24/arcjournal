@@ -260,7 +260,9 @@ const Index = () => {
                               title: "Reflection Saved",
                               description: "Your insight has been recorded in your journal",
                             });
+                            handleReset();
                           }}
+                          onBack={() => setShowTextView(true)}
                         />
                         <div className="flex justify-center mt-6">
                           <Button

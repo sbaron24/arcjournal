@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
@@ -14,6 +14,7 @@ interface ReflectionLayoutBProps {
   question: string;
   user: User;
   onSuccess: () => void;
+  onBack: () => void;
 }
 
 export const ReflectionLayoutB = ({
@@ -23,6 +24,7 @@ export const ReflectionLayoutB = ({
   question,
   user,
   onSuccess,
+  onBack,
 }: ReflectionLayoutBProps) => {
   const [reflection, setReflection] = useState('');
   const [generatedPrompt, setGeneratedPrompt] = useState('');
@@ -150,13 +152,24 @@ export const ReflectionLayoutB = ({
           </p>
         </div>
 
-        <Button 
-          type="submit" 
-          disabled={isSubmitting || !reflection.trim()}
-          className="w-full"
-        >
-          {isSubmitting ? "Saving..." : "Save Reflection"}
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            type="button"
+            onClick={onBack}
+            variant="outline"
+            className="border-mystic/50"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || !reflection.trim()}
+            className="flex-1"
+          >
+            {isSubmitting ? "Saving..." : "Save Reflection"}
+          </Button>
+        </div>
       </form>
     </div>
   );
