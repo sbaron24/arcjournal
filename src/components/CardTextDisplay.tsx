@@ -9,11 +9,12 @@ interface CardTextDisplayProps {
     symbolicLanguage: string;
     shadowsChallenges: string;
   };
+  existingHighlights?: string[];
   onContinue: (highlights: string[]) => void;
 }
 
-export const CardTextDisplay = ({ cardName, cardText, onContinue }: CardTextDisplayProps) => {
-  const [highlights, setHighlights] = useState<string[]>([]);
+export const CardTextDisplay = ({ cardName, cardText, existingHighlights = [], onContinue }: CardTextDisplayProps) => {
+  const [highlights, setHighlights] = useState<string[]>(existingHighlights);
 
   const handleTextSelection = () => {
     const selection = window.getSelection();

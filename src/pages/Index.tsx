@@ -245,6 +245,7 @@ const Index = () => {
                       <CardTextDisplay
                         cardName={hangedManData.name}
                         cardText={hangedManData.text}
+                        existingHighlights={highlights}
                         onContinue={handleContinueFromText}
                       />
                     ) : (
