@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 
 interface CardTextDisplayProps {
   cardName: string;
@@ -30,10 +30,50 @@ export const CardTextDisplay = ({ cardName, cardText, onContinue }: CardTextDisp
     setHighlights(highlights.filter(h => h !== highlight));
   };
 
+  const renderTextWithHighlights = (text: string) => {
+    if (highlights.length === 0) return text;
+    
+    let result = text;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    
+    highlights.forEach((highlight) => {
+      const index = result.indexOf(highlight, lastIndex);
+      if (index !== -1) {
+        if (index > lastIndex) {
+          parts.push(result.substring(lastIndex, index));
+        }
+        parts.push(
+          <mark 
+            key={`${highlight}-${index}`}
+            className="bg-gold/30 text-foreground cursor-pointer hover:bg-gold/40 rounded px-1"
+            onClick={() => removeHighlight(highlight)}
+            title="Click to remove highlight"
+          >
+            {highlight}
+          </mark>
+        );
+        lastIndex = index + highlight.length;
+      }
+    });
+    
+    if (lastIndex < result.length) {
+      parts.push(result.substring(lastIndex));
+    }
+    
+    return parts.length > 0 ? parts : text;
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4 p-6 bg-card/50 rounded-lg border border-mystic/20">
         <h2 className="font-serif text-2xl text-foreground">{cardName}</h2>
+        
+        {highlights.length > 0 && (
+          <p className="text-sm text-muted-foreground italic">
+            Click on any highlighted text to remove it
+          </p>
+        )}
         
         <div 
           className="space-y-6 text-foreground select-text"
@@ -41,41 +81,19 @@ export const CardTextDisplay = ({ cardName, cardText, onContinue }: CardTextDisp
         >
           <div>
             <h3 className="font-serif text-lg text-gold mb-2">Essence</h3>
-            <p className="leading-relaxed">{cardText.essence}</p>
+            <p className="leading-relaxed">{renderTextWithHighlights(cardText.essence)}</p>
           </div>
 
           <div>
             <h3 className="font-serif text-lg text-gold mb-2">Symbolic Language</h3>
-            <p className="leading-relaxed whitespace-pre-line">{cardText.symbolicLanguage}</p>
+            <p className="leading-relaxed whitespace-pre-line">{renderTextWithHighlights(cardText.symbolicLanguage)}</p>
           </div>
 
           <div>
             <h3 className="font-serif text-lg text-gold mb-2">Shadows & Challenges</h3>
-            <p className="leading-relaxed">{cardText.shadowsChallenges}</p>
+            <p className="leading-relaxed">{renderTextWithHighlights(cardText.shadowsChallenges)}</p>
           </div>
         </div>
-
-        {highlights.length > 0 && (
-          <div className="mt-6 space-y-3">
-            <Label className="text-foreground font-serif">Your Highlights:</Label>
-            <div className="space-y-2">
-              {highlights.map((highlight, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-2 p-3 bg-gold/10 rounded border border-gold/30"
-                >
-                  <span className="flex-1 text-sm text-foreground">{highlight}</span>
-                  <button
-                    onClick={() => removeHighlight(highlight)}
-                    className="text-muted-foreground hover:text-foreground text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="flex justify-center">
