@@ -9,31 +9,41 @@ import { Sparkles, BookOpen, User, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import temperanceImage from "@/assets/temperance-card.jpg";
+import hangedManImage from "@/assets/hanged-man-card.jpg";
+import { CardTextDisplay } from "@/components/CardTextDisplay";
+import { ReflectionLayoutB } from "@/components/ReflectionLayoutB";
 
-const temperanceData = {
-  name: "Temperance",
-  description: "Alchemy and integration of opposites; divine flow.",
-  keywords: ["balance", "moderation", "healing"],
-  shadowKeywords: ["excess", "imbalance"],
-  symbolicPair: "The Devil",
-  element: "Fire",
-  planetSign: "Sagittarius",
-  imageUrl: temperanceImage,
+const hangedManData = {
+  name: "The Hanged Man",
+  description: "Surrender, new perspective, letting go.",
+  keywords: ["stillness", "mistake surrender for defeat", "masquerade as spiritual detachment"],
+  shadowKeywords: ["control", "avoidance"],
+  symbolicPair: "The Fool",
+  element: "Water",
+  planetSign: "Neptune",
+  imageUrl: hangedManImage,
+  text: {
+    essence: "Suspended between worlds, the Hanged Man embodies the paradox of release as progress. He teaches that true movement often begins in stillness — that growth is not always forward, but inward. Through voluntary surrender, a new vantage emerges: the ability to see life not as something to master, but to meet with openness. This archetype asks you to pause long enough for wisdom to turn itself right-side up within you.",
+    symbolicLanguage: "The inverted figure reflects the reorientation of perception.\nThe halo of light symbolizes illumination born from surrender.\nThe tree of life represents the axis between heaven and earth — the living cross of experience.\nThe serene face reminds us that acceptance, not struggle, reveals peace.\nEvery detail of the card whispers: what you resist binds you; what you yield to transforms you.",
+    shadowsChallenges: "When this energy turns shadowed, we cling to control or mistake surrender for defeat. Inaction can disguise itself as patience; victimhood can masquerade as spiritual detachment. The challenge is discerning when to let go — and when \"letting go\" has become avoidance. The Hanged Man calls you to surrender consciously, not passively — to participate in your own unbinding."
+  }
 };
 
 const Index = () => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [cardId, setCardId] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
+  const [layoutType, setLayoutType] = useState<"A" | "B">("A");
+  const [showTextView, setShowTextView] = useState(true);
+  const [highlights, setHighlights] = useState<string[]>([]);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Fetch the Temperance card ID
+    // Fetch the Hanged Man card ID
     const fetchCardId = async () => {
-      const { data } = await supabase.from("tarot_cards").select("id").eq("name", "Temperance").single();
+      const { data } = await supabase.from("tarot_cards").select("id").eq("name", "The Hanged Man").single();
 
       if (data) {
         setCardId(data.id);
@@ -46,6 +56,13 @@ const Index = () => {
   const handleReset = () => {
     setIsRevealed(false);
     setQuestion("");
+    setShowTextView(true);
+    setHighlights([]);
+  };
+
+  const handleContinueFromText = (selectedHighlights: string[]) => {
+    setHighlights(selectedHighlights);
+    setShowTextView(false);
   };
 
   const handleSignOut = async () => {
@@ -112,8 +129,11 @@ const Index = () => {
             <div className="w-full max-w-md mb-8 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="question" className="text-foreground">
-                  What question brings you here today? (Optional)
+                  What question do you seek guidance on? (Optional)
                 </Label>
+                <p className="text-sm text-muted-foreground">
+                  You may draw a card with or without a question
+                </p>
                 <Input
                   id="question"
                   placeholder="Enter your question or intention..."
@@ -130,62 +150,148 @@ const Index = () => {
           </>
         ) : (
           <div className="w-full max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-              {/* Left: Card with full image */}
-              <div className="lg:col-span-1">
-                <div className="space-y-4">
-                  <h2 className="font-serif text-2xl text-foreground text-center">{temperanceData.name}</h2>
-                  <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
-                    <img src={temperanceData.imageUrl} alt={temperanceData.name} className="w-full h-auto" />
+            {/* Layout Toggle */}
+            <div className="flex justify-center gap-2 mb-8">
+              <Button
+                variant={layoutType === "A" ? "default" : "outline"}
+                onClick={() => setLayoutType("A")}
+                className={layoutType === "A" ? "bg-mystic hover:bg-mystic/80" : "border-mystic/50"}
+              >
+                Reflection Layout A
+              </Button>
+              <Button
+                variant={layoutType === "B" ? "default" : "outline"}
+                onClick={() => setLayoutType("B")}
+                className={layoutType === "B" ? "bg-mystic hover:bg-mystic/80" : "border-mystic/50"}
+              >
+                Reflection Layout B
+              </Button>
+            </div>
+
+            {layoutType === "A" ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Left: Card with full image */}
+                <div className="lg:col-span-1">
+                  <div className="space-y-4">
+                    <h2 className="font-serif text-2xl text-foreground text-center">{hangedManData.name}</h2>
+                    <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
+                      <img src={hangedManData.imageUrl} alt={hangedManData.name} className="w-full h-auto" />
+                    </div>
+                    <p className="text-muted-foreground text-center">{hangedManData.description}</p>
                   </div>
-                  <p className="text-muted-foreground text-center">{temperanceData.description}</p>
+                </div>
+
+                {/* Right: Reflection components */}
+                <div className="lg:col-span-2 space-y-6">
+                  {user && cardId ? (
+                    <>
+                      <ReflectionForm
+                        cardId={cardId}
+                        question={question}
+                        cardData={hangedManData}
+                        onSuccess={() => {
+                          toast({
+                            title: "Reflection Saved",
+                            description: "Your insight has been recorded in your journal",
+                          });
+                        }}
+                      />
+                      <div className="flex justify-center">
+                        <Button
+                          onClick={handleReset}
+                          variant="outline"
+                          className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                        >
+                          Draw Another Card
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
+                      <p className="text-muted-foreground">Sign in to save your reflections</p>
+                      <div className="flex gap-4 justify-center">
+                        <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
+                          Sign In
+                        </Button>
+                        <Button
+                          onClick={handleReset}
+                          variant="outline"
+                          className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                        >
+                          Draw Another Card
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Right: Reflection components */}
-              <div className="lg:col-span-2 space-y-6">
-                {user && cardId ? (
-                  <>
-                    <ReflectionForm
-                      cardId={cardId}
-                      question={question}
-                      cardData={temperanceData}
-                      onSuccess={() => {
-                        toast({
-                          title: "Reflection Saved",
-                          description: "Your insight has been recorded in your journal",
-                        });
-                      }}
-                    />
-                    <div className="flex justify-center">
-                      <Button
-                        onClick={handleReset}
-                        variant="outline"
-                        className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
-                      >
-                        Draw Another Card
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
-                    <p className="text-muted-foreground">Sign in to save your reflections</p>
-                    <div className="flex gap-4 justify-center">
-                      <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
-                        Sign In
-                      </Button>
-                      <Button
-                        onClick={handleReset}
-                        variant="outline"
-                        className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
-                      >
-                        Draw Another Card
-                      </Button>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Left: Card with full image */}
+                <div className="lg:col-span-1">
+                  <div className="space-y-4">
+                    <h2 className="font-serif text-2xl text-foreground text-center">{hangedManData.name}</h2>
+                    <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
+                      <img src={hangedManData.imageUrl} alt={hangedManData.name} className="w-full h-auto" />
                     </div>
                   </div>
-                )}
+                </div>
+
+                {/* Right: Text view or reflection view */}
+                <div className="lg:col-span-2">
+                  {user && cardId ? (
+                    showTextView ? (
+                      <CardTextDisplay
+                        cardName={hangedManData.name}
+                        cardText={hangedManData.text}
+                        onContinue={handleContinueFromText}
+                      />
+                    ) : (
+                      <>
+                        <ReflectionLayoutB
+                          cardId={cardId}
+                          cardName={hangedManData.name}
+                          highlights={highlights}
+                          question={question}
+                          user={user}
+                          onSuccess={() => {
+                            toast({
+                              title: "Reflection Saved",
+                              description: "Your insight has been recorded in your journal",
+                            });
+                          }}
+                        />
+                        <div className="flex justify-center mt-6">
+                          <Button
+                            onClick={handleReset}
+                            variant="outline"
+                            className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                          >
+                            Draw Another Card
+                          </Button>
+                        </div>
+                      </>
+                    )
+                  ) : (
+                    <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
+                      <p className="text-muted-foreground">Sign in to save your reflections</p>
+                      <div className="flex gap-4 justify-center">
+                        <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
+                          Sign In
+                        </Button>
+                        <Button
+                          onClick={handleReset}
+                          variant="outline"
+                          className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                        >
+                          Draw Another Card
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
