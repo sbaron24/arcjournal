@@ -67,6 +67,7 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let accumulatedText = '';
+      let buffer = '';
 
       if (reader) {
         while (true) {
@@ -74,11 +75,15 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          buffer += chunk;
+          
+          const lines = buffer.split('\n');
+          // Keep the last partial line in buffer
+          buffer = lines.pop() || '';
 
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
+            if (line.trim().startsWith('data: ')) {
+              const data = line.slice(line.indexOf('data: ') + 6).trim();
               if (data === '[DONE]') continue;
               
               try {
@@ -89,7 +94,7 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
                   setGeneratedPrompt(accumulatedText);
                 }
               } catch (e) {
-                // Skip invalid JSON
+                console.log('Failed to parse:', data);
               }
             }
           }
