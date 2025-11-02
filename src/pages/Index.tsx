@@ -33,17 +33,13 @@ const Index = () => {
   useEffect(() => {
     // Fetch the Temperance card ID
     const fetchCardId = async () => {
-      const { data } = await supabase
-        .from('tarot_cards')
-        .select('id')
-        .eq('name', 'Temperance')
-        .single();
-      
+      const { data } = await supabase.from("tarot_cards").select("id").eq("name", "Temperance").single();
+
       if (data) {
         setCardId(data.id);
       }
     };
-    
+
     fetchCardId();
   }, []);
 
@@ -69,36 +65,27 @@ const Index = () => {
       <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-card/50" />
       <div className="fixed inset-0 opacity-30">
         <div className="absolute top-20 left-20 w-64 h-64 bg-mystic/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-celestial/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+        <div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-celestial/20 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       {/* Top navigation */}
       <div className="relative z-20 container mx-auto px-4 py-4 flex justify-end gap-2">
         {user ? (
           <>
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/journal')}
-              className="text-foreground hover:text-gold"
-            >
+            <Button variant="ghost" onClick={() => navigate("/journal")} className="text-foreground hover:text-gold">
               <BookOpen className="mr-2 h-4 w-4" />
               Journal
             </Button>
-            <Button
-              variant="ghost"
-              onClick={handleSignOut}
-              className="text-foreground hover:text-gold"
-            >
+            <Button variant="ghost" onClick={handleSignOut} className="text-foreground hover:text-gold">
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </Button>
           </>
         ) : (
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/auth')}
-            className="text-foreground hover:text-gold"
-          >
+          <Button variant="ghost" onClick={() => navigate("/auth")} className="text-foreground hover:text-gold">
             <User className="mr-2 h-4 w-4" />
             Sign In
           </Button>
@@ -112,11 +99,9 @@ const Index = () => {
             <Sparkles className="w-8 h-8 text-gold" />
             <div className="w-12 h-[2px] bg-gradient-to-l from-transparent via-gold to-gold" />
           </div>
-          
-          <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-2">
-            Mystic Tarot
-          </h1>
-          
+
+          <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-2">Mystic Tarot</h1>
+
           <p className="text-muted-foreground text-lg max-w-md mx-auto">
             Discover divine guidance through the ancient art of tarot reading
           </p>
@@ -129,9 +114,6 @@ const Index = () => {
                 <Label htmlFor="question" className="text-foreground">
                   What question brings you here today? (Optional)
                 </Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  You can draw a card without a question, or enter one for more personalized guidance
-                </p>
                 <Input
                   id="question"
                   placeholder="Enter your question or intention..."
@@ -143,11 +125,7 @@ const Index = () => {
             </div>
 
             <div className="mb-8">
-              <TarotCard 
-                data={undefined}
-                isRevealed={false}
-                onReveal={() => setIsRevealed(true)}
-              />
+              <TarotCard data={undefined} isRevealed={false} onReveal={() => setIsRevealed(true)} />
             </div>
           </>
         ) : (
@@ -158,11 +136,7 @@ const Index = () => {
                 <div className="space-y-4">
                   <h2 className="font-serif text-2xl text-foreground text-center">{temperanceData.name}</h2>
                   <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
-                    <img 
-                      src={temperanceData.imageUrl} 
-                      alt={temperanceData.name}
-                      className="w-full h-auto"
-                    />
+                    <img src={temperanceData.imageUrl} alt={temperanceData.name} className="w-full h-auto" />
                   </div>
                   <p className="text-muted-foreground text-center">{temperanceData.description}</p>
                 </div>
@@ -172,7 +146,7 @@ const Index = () => {
               <div className="lg:col-span-2 space-y-6">
                 {user && cardId ? (
                   <>
-                    <ReflectionForm 
+                    <ReflectionForm
                       cardId={cardId}
                       question={question}
                       cardData={temperanceData}
@@ -184,7 +158,7 @@ const Index = () => {
                       }}
                     />
                     <div className="flex justify-center">
-                      <Button 
+                      <Button
                         onClick={handleReset}
                         variant="outline"
                         className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
@@ -195,17 +169,12 @@ const Index = () => {
                   </>
                 ) : (
                   <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
-                    <p className="text-muted-foreground">
-                      Sign in to save your reflections
-                    </p>
+                    <p className="text-muted-foreground">Sign in to save your reflections</p>
                     <div className="flex gap-4 justify-center">
-                      <Button 
-                        onClick={() => navigate('/auth')}
-                        className="bg-mystic hover:bg-mystic/80"
-                      >
+                      <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
                         Sign In
                       </Button>
-                      <Button 
+                      <Button
                         onClick={handleReset}
                         variant="outline"
                         className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
@@ -220,10 +189,10 @@ const Index = () => {
           </div>
         )}
 
-
         <div className="mt-16 text-center text-muted-foreground text-sm max-w-lg">
           <p className="italic">
-            "The cards reveal not what will be, but what might be—a glimpse into the infinite possibilities of your journey."
+            "The cards reveal not what will be, but what might be—a glimpse into the infinite possibilities of your
+            journey."
           </p>
         </div>
       </div>
