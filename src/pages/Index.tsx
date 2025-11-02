@@ -122,76 +122,101 @@ const Index = () => {
           </p>
         </div>
 
-        {!isRevealed && (
-          <div className="w-full max-w-md mb-8 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="question" className="text-foreground">
-                What question brings you here today?
-              </Label>
-              <Input
-                id="question"
-                placeholder="Enter your question or intention..."
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className="border-mystic/30 focus:border-mystic/60"
+        {!isRevealed ? (
+          <>
+            <div className="w-full max-w-md mb-8 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="question" className="text-foreground">
+                  What question brings you here today?
+                </Label>
+                <Input
+                  id="question"
+                  placeholder="Enter your question or intention..."
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  className="border-mystic/30 focus:border-mystic/60"
+                />
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <TarotCard 
+                data={undefined}
+                isRevealed={false}
+                onReveal={() => setIsRevealed(true)}
               />
             </div>
-          </div>
-        )}
+          </>
+        ) : (
+          <div className="w-full max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+              {/* Left: Card with full image */}
+              <div className="lg:col-span-1">
+                <div className="space-y-4">
+                  <h2 className="font-serif text-2xl text-foreground text-center">{temperanceData.name}</h2>
+                  <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
+                    <img 
+                      src={temperanceData.imageUrl} 
+                      alt={temperanceData.name}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                  <p className="text-muted-foreground text-center">{temperanceData.description}</p>
+                </div>
+              </div>
 
-        <div className="mb-8">
-          <TarotCard 
-            data={isRevealed ? temperanceData : undefined}
-            isRevealed={isRevealed}
-            onReveal={() => setIsRevealed(true)}
-          />
-        </div>
-
-        {isRevealed && user && cardId && (
-          <div className="mt-8 w-full flex flex-col items-center gap-6">
-            <ReflectionForm 
-              cardId={cardId}
-              question={question}
-              cardData={temperanceData}
-              onSuccess={() => {
-                toast({
-                  title: "Reflection Saved",
-                  description: "Your insight has been recorded in your journal",
-                });
-              }}
-            />
-            <Button 
-              onClick={handleReset}
-              variant="outline"
-              className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
-            >
-              Draw Another Card
-            </Button>
-          </div>
-        )}
-
-        {isRevealed && !user && (
-          <div className="mt-8 text-center space-y-4">
-            <p className="text-muted-foreground">
-              Sign in to save your reflections
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Button 
-                onClick={() => navigate('/auth')}
-                className="bg-mystic hover:bg-mystic/80"
-              >
-                Sign In
-              </Button>
-              <Button 
-                onClick={handleReset}
-                variant="outline"
-                className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
-              >
-                Draw Another Card
-              </Button>
+              {/* Right: Reflection components */}
+              <div className="lg:col-span-2 space-y-6">
+                {user && cardId ? (
+                  <>
+                    <ReflectionForm 
+                      cardId={cardId}
+                      question={question}
+                      cardData={temperanceData}
+                      onSuccess={() => {
+                        toast({
+                          title: "Reflection Saved",
+                          description: "Your insight has been recorded in your journal",
+                        });
+                      }}
+                    />
+                    <div className="flex justify-center">
+                      <Button 
+                        onClick={handleReset}
+                        variant="outline"
+                        className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                      >
+                        Draw Another Card
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
+                    <p className="text-muted-foreground">
+                      Sign in to save your reflections
+                    </p>
+                    <div className="flex gap-4 justify-center">
+                      <Button 
+                        onClick={() => navigate('/auth')}
+                        className="bg-mystic hover:bg-mystic/80"
+                      >
+                        Sign In
+                      </Button>
+                      <Button 
+                        onClick={handleReset}
+                        variant="outline"
+                        className="border-mystic/50 text-foreground hover:bg-mystic/10 hover:text-gold transition-all"
+                      >
+                        Draw Another Card
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
+
 
         <div className="mt-16 text-center text-muted-foreground text-sm max-w-lg">
           <p className="italic">

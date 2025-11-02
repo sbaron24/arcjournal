@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-import { Sparkles } from 'lucide-react';
+import { ThemeSelector } from './ThemeSelector';
+import { ReflectionPrompt } from './ReflectionPrompt';
+import { ReflectionInput } from './ReflectionInput';
 
 interface ReflectionFormProps {
   cardId: string;
@@ -160,122 +158,33 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-2xl">
-      {/* Card Attribute Selections */}
-      <div className="space-y-4">
-        <Label className="text-foreground font-serif text-lg">Select Themes That Resonate With You</Label>
-        <p className="text-sm text-muted-foreground">Choose the keywords and themes from this card that speak to your question</p>
-        
-        <div className="space-y-3">
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">Keywords</p>
-            <div className="flex flex-wrap gap-2">
-              {cardData.keywords.map((keyword) => (
-                <Badge
-                  key={keyword}
-                  variant={selectedKeywords.includes(keyword) ? "default" : "outline"}
-                  className="cursor-pointer transition-colors"
-                  onClick={() => toggleKeyword(keyword)}
-                >
-                  {keyword}
-                </Badge>
-              ))}
-            </div>
-          </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+      <ThemeSelector
+        cardData={cardData}
+        selectedKeywords={selectedKeywords}
+        selectedShadowKeywords={selectedShadowKeywords}
+        selectedElement={selectedElement}
+        selectedPlanetSign={selectedPlanetSign}
+        onToggleKeyword={toggleKeyword}
+        onToggleShadowKeyword={toggleShadowKeyword}
+        onToggleElement={toggleElement}
+        onTogglePlanetSign={togglePlanetSign}
+      />
 
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">Shadow Keywords</p>
-            <div className="flex flex-wrap gap-2">
-              {cardData.shadowKeywords.map((keyword) => (
-                <Badge
-                  key={keyword}
-                  variant={selectedShadowKeywords.includes(keyword) ? "default" : "outline"}
-                  className="cursor-pointer transition-colors"
-                  onClick={() => toggleShadowKeyword(keyword)}
-                >
-                  {keyword}
-                </Badge>
-              ))}
-            </div>
-          </div>
+      <ReflectionPrompt
+        isGenerating={isGenerating}
+        generatedPrompt={generatedPrompt}
+        onGenerate={generatePrompt}
+      />
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground mb-2">Element</p>
-              <Badge 
-                variant={selectedElement ? "default" : "outline"}
-                className="w-full justify-center cursor-pointer transition-colors"
-                onClick={toggleElement}
-              >
-                {cardData.element}
-              </Badge>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-2">Planet/Sign</p>
-              <Badge 
-                variant={selectedPlanetSign ? "default" : "outline"}
-                className="w-full justify-center cursor-pointer transition-colors"
-                onClick={togglePlanetSign}
-              >
-                {cardData.planetSign}
-              </Badge>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Generated Prompt Section */}
-      <div className="space-y-3 p-6 bg-card/50 rounded-lg border border-mystic/20">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-5 h-5 text-gold" />
-          <Label className="text-foreground font-serif text-lg">AI-Generated Reflection Prompt (Optional)</Label>
-        </div>
-        <p className="text-sm text-muted-foreground mb-3">
-          Generate a personalized prompt based on your question and selected themes, or write your own reflection below
-        </p>
-        {isGenerating ? (
-          <p className="text-muted-foreground italic">Weaving the card's wisdom with your question...</p>
-        ) : generatedPrompt ? (
-          <p className="text-foreground leading-relaxed">{generatedPrompt}</p>
-        ) : (
-          <Button
-            type="button"
-            onClick={generatePrompt}
-            variant="outline"
-            className="border-mystic/50"
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            Generate Personalized Prompt
-          </Button>
-        )}
-      </div>
-
-      {/* Reflection Input */}
-      <div className="space-y-2">
-        <Label htmlFor="reflection" className="text-foreground">
-          Record Your Reflection
-        </Label>
-        <Textarea
-          id="reflection"
-          placeholder="What insights does this card bring to you? How does it resonate with your current journey?"
-          value={reflection}
-          onChange={(e) => setReflection(e.target.value)}
-          className="min-h-[150px] border-mystic/30 focus:border-mystic/60"
-          maxLength={2000}
-          required
+      <div className="lg:col-span-2">
+        <ReflectionInput
+          reflection={reflection}
+          isSubmitting={isSubmitting}
+          onReflectionChange={setReflection}
+          onSubmit={handleSubmit}
         />
-        <p className="text-xs text-muted-foreground">
-          {reflection.length}/2000 characters
-        </p>
       </div>
-
-      <Button 
-        type="submit" 
-        disabled={isSubmitting || !reflection.trim()}
-        className="w-full"
-      >
-        {isSubmitting ? "Saving..." : "Save Reflection"}
-      </Button>
-    </form>
+    </div>
   );
 };
