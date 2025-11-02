@@ -23,10 +23,10 @@ export const ReflectionInput = ({
         </Label>
         <Textarea
           id="reflection"
-          placeholder="What insights does this card bring to you? How does it resonate with your current journey?"
+          placeholder="How does this card resonate with your current journey?"
           value={reflection}
           onChange={(e) => onReflectionChange(e.target.value)}
-          className="min-h-[150px] border-mystic/30 focus:border-mystic/60"
+          className="min-h-[150px] border-mystic/30 focus:border-mystic/60 placeholder:text-muted-foreground/60"
           maxLength={2000}
           required
         />

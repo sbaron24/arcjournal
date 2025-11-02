@@ -127,8 +127,11 @@ const Index = () => {
             <div className="w-full max-w-md mb-8 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="question" className="text-foreground">
-                  What question brings you here today?
+                  What question brings you here today? (Optional)
                 </Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  You can draw a card without a question, or enter one for more personalized guidance
+                </p>
                 <Input
                   id="question"
                   placeholder="Enter your question or intention..."

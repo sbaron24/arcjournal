@@ -39,15 +39,6 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
   const { toast } = useToast();
 
   const generatePrompt = async () => {
-    if (!question.trim()) {
-      toast({
-        title: "Question Required",
-        description: "Please enter a question first",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-tarot-prompt', {
