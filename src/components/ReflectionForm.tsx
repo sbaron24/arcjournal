@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { z } from 'zod';
-import { ThemeSelector } from './ThemeSelector';
-import { ReflectionPrompt } from './ReflectionPrompt';
-import { ReflectionInput } from './ReflectionInput';
+import { useState, useRef, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { ThemeSelector } from "./ThemeSelector";
+import { ReflectionPrompt } from "./ReflectionPrompt";
+import { ReflectionInput } from "./ReflectionInput";
 
 interface ReflectionFormProps {
   cardId: string;
@@ -21,34 +21,97 @@ interface ReflectionFormProps {
 }
 
 const reflectionSchema = z.object({
-  reflection: z.string()
+  reflection: z
+    .string()
     .trim()
     .min(1, { message: "Reflection cannot be empty" })
     .max(2000, { message: "Reflection must be less than 2000 characters" }),
 });
 
-export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: ReflectionFormProps) => {
-  const [reflection, setReflection] = useState('');
+export const ReflectionForm = ({
+  cardId,
+  question,
+  cardData,
+  onSuccess,
+}: ReflectionFormProps) => {
+  const [reflection, setReflection] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [renderedPrompt, setRenderedPrompt] = useState("");
+  const accumulatedTextRef = useRef("");
+  const renderIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const renderedIndexRef = useRef(0);
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
-  const [selectedShadowKeywords, setSelectedShadowKeywords] = useState<string[]>([]);
+  const [selectedShadowKeywords, setSelectedShadowKeywords] = useState<
+    string[]
+  >([]);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
-  const [selectedPlanetSign, setSelectedPlanetSign] = useState<string | null>(null);
+  const [selectedPlanetSign, setSelectedPlanetSign] = useState<string | null>(
+    null
+  );
   const { toast } = useToast();
+
+  // Character-by-character rendering effect
+  useEffect(() => {
+    if (!isGenerating && renderIntervalRef.current) {
+      // Clean up when done generating
+      if (renderIntervalRef.current) {
+        clearInterval(renderIntervalRef.current);
+        renderIntervalRef.current = null;
+      }
+      return;
+    }
+
+    if (isGenerating) {
+      renderIntervalRef.current = setInterval(() => {
+        const targetText = accumulatedTextRef.current;
+        if (renderedIndexRef.current < targetText.length) {
+          renderedIndexRef.current++;
+          setRenderedPrompt(targetText.slice(0, renderedIndexRef.current));
+        } else if (!isGenerating) {
+          // Stop interval when caught up and not generating
+          if (renderIntervalRef.current) {
+            clearInterval(renderIntervalRef.current);
+            renderIntervalRef.current = null;
+          }
+        }
+      }, 35); // 35ms per character for calm, slow feel
+    }
+
+    return () => {
+      if (renderIntervalRef.current) {
+        clearInterval(renderIntervalRef.current);
+        renderIntervalRef.current = null;
+      }
+    };
+  }, [isGenerating]);
 
   const generatePrompt = async () => {
     setIsGenerating(true);
-    setGeneratedPrompt('');
+    setGeneratedPrompt("");
+    setRenderedPrompt("");
+    accumulatedTextRef.current = "";
+    renderedIndexRef.current = 0;
+
+    // Clear any existing interval
+    if (renderIntervalRef.current) {
+      clearInterval(renderIntervalRef.current);
+      renderIntervalRef.current = null;
+    }
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-tarot-prompt`,
+        `${
+          import.meta.env.VITE_SUPABASE_URL
+        }/functions/v1/generate-tarot-prompt`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+            }`,
           },
           body: JSON.stringify({
             question,
@@ -62,46 +125,59 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
         }
       );
 
-      if (!response.ok) throw new Error('Failed to generate prompt');
+      if (!response.ok) throw new Error("Failed to generate prompt");
 
       const reader = response.body?.getReader();
+      if (!reader) throw new Error("Response body is not readable");
+
       const decoder = new TextDecoder();
-      let accumulatedText = '';
-      let buffer = '';
+      let buffer = "";
 
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
 
-          const chunk = decoder.decode(value, { stream: true });
-          buffer += chunk;
-          console.log("SEAN BUFFER: ", chunk)
-          const lines = buffer.split('\n');
-          // Keep the last partial line in buffer
-          buffer = lines.pop() || '';
+        buffer += decoder.decode(value, { stream: true });
 
-          for (const line of lines) {
-            if (line.trim().startsWith('data: ')) {
-              const data = line.slice(line.indexOf('data: ') + 6).trim();
-              if (data === '[DONE]') continue;
-              
-              try {
-                const parsed = JSON.parse(data);
-                const content = parsed.choices?.[0]?.delta?.content;
-                if (content) {
-                  accumulatedText += content;
-                  setGeneratedPrompt(accumulatedText);
-                }
-              } catch (e) {
-                console.log('Failed to parse:', data);
-              }
+        // SSE data may come in multiple "data: ...\n\n" blocks; split on double newline
+        const parts = buffer.split("\n\n");
+        // keep last partial chunk in buffer
+        buffer = parts.pop() || "";
+
+        for (const part of parts) {
+          // each part can contain lines; find lines that start with "data: "
+          for (const line of part.split("\n")) {
+            if (!line.startsWith("data:")) continue;
+            const data = line.replace(/^data:\s*/, "");
+
+            if (data === "[DONE]") {
+              // Ensure final text is rendered
+              setGeneratedPrompt(accumulatedTextRef.current);
+              setRenderedPrompt(accumulatedTextRef.current);
+              return;
+            }
+
+            // parse the JSON payload
+            let json;
+            try {
+              json = JSON.parse(data);
+            } catch (e) {
+              console.warn("could not parse json chunk", e, data);
+              continue;
+            }
+
+            // extract the delta text (chat completions streaming)
+            const delta = json.choices?.[0]?.delta;
+            const text = delta?.content ?? ""; // sometimes empty for role-only chunk
+            if (text) {
+              accumulatedTextRef.current += text;
+              setGeneratedPrompt(accumulatedTextRef.current);
             }
           }
         }
       }
     } catch (error) {
-      console.error('Error generating prompt:', error);
+      console.error("Error generating prompt:", error);
       toast({
         title: "Error",
         description: "Failed to generate personalized prompt",
@@ -109,27 +185,37 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
       });
     } finally {
       setIsGenerating(false);
+      // Final render of any remaining text
+      setRenderedPrompt(accumulatedTextRef.current);
     }
   };
 
   const toggleKeyword = (keyword: string) => {
-    setSelectedKeywords(prev =>
-      prev.includes(keyword) ? prev.filter(k => k !== keyword) : [...prev, keyword]
+    setSelectedKeywords((prev) =>
+      prev.includes(keyword)
+        ? prev.filter((k) => k !== keyword)
+        : [...prev, keyword]
     );
   };
 
   const toggleShadowKeyword = (keyword: string) => {
-    setSelectedShadowKeywords(prev =>
-      prev.includes(keyword) ? prev.filter(k => k !== keyword) : [...prev, keyword]
+    setSelectedShadowKeywords((prev) =>
+      prev.includes(keyword)
+        ? prev.filter((k) => k !== keyword)
+        : [...prev, keyword]
     );
   };
 
   const toggleElement = () => {
-    setSelectedElement(prev => prev === cardData.element ? null : cardData.element);
+    setSelectedElement((prev) =>
+      prev === cardData.element ? null : cardData.element
+    );
   };
 
   const togglePlanetSign = () => {
-    setSelectedPlanetSign(prev => prev === cardData.planetSign ? null : cardData.planetSign);
+    setSelectedPlanetSign((prev) =>
+      prev === cardData.planetSign ? null : cardData.planetSign
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,8 +225,10 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
       const validated = reflectionSchema.parse({ reflection });
       setIsSubmitting(true);
 
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         toast({
           title: "Error",
@@ -150,19 +238,17 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
         return;
       }
 
-      const { error } = await supabase
-        .from('reflections')
-        .insert({
-          user_id: user.id,
-          tarot_card_id: cardId,
-          reflection: validated.reflection,
-          question: question,
-          generated_prompt: generatedPrompt,
-          selected_keywords: selectedKeywords,
-          selected_shadow_keywords: selectedShadowKeywords,
-          selected_element: selectedElement,
-          selected_planet_sign: selectedPlanetSign,
-        });
+      const { error } = await supabase.from("reflections").insert({
+        user_id: user.id,
+        tarot_card_id: cardId,
+        reflection: validated.reflection,
+        question: question,
+        generated_prompt: generatedPrompt,
+        selected_keywords: selectedKeywords,
+        selected_shadow_keywords: selectedShadowKeywords,
+        selected_element: selectedElement,
+        selected_planet_sign: selectedPlanetSign,
+      });
 
       if (error) throw error;
 
@@ -170,8 +256,8 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
         title: "Success",
         description: "Your reflection has been saved",
       });
-      
-      setReflection('');
+
+      setReflection("");
       onSuccess?.();
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -208,8 +294,9 @@ export const ReflectionForm = ({ cardId, question, cardData, onSuccess }: Reflec
 
       <ReflectionPrompt
         isGenerating={isGenerating}
-        generatedPrompt={generatedPrompt}
+        generatedPrompt={renderedPrompt}
         onGenerate={generatePrompt}
+        renderMode="character"
       />
 
       <div className="lg:col-span-2">
