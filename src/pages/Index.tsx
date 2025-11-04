@@ -16,7 +16,11 @@ import { ReflectionLayoutB } from "@/components/ReflectionLayoutB";
 const hangedManData = {
   name: "The Hanged Man",
   description: "Surrender, new perspective, letting go.",
-  keywords: ["stillness", "mistake surrender for defeat", "masquerade as spiritual detachment"],
+  keywords: [
+    "stillness",
+    "mistake surrender for defeat",
+    "masquerade as spiritual detachment",
+  ],
   shadowKeywords: ["control", "avoidance"],
   symbolicPair: "The Fool",
   element: "Water",
@@ -46,7 +50,11 @@ const Index = () => {
   useEffect(() => {
     // Fetch the Hanged Man card ID
     const fetchCardId = async () => {
-      const { data } = await supabase.from("tarot_cards").select("id").eq("name", "The Hanged Man").single();
+      const { data } = await supabase
+        .from("tarot_cards")
+        .select("id")
+        .eq("name", "The Hanged Man")
+        .single();
 
       if (data) {
         setCardId(data.id);
@@ -95,17 +103,29 @@ const Index = () => {
       <div className="relative z-20 container mx-auto px-4 py-4 flex justify-end gap-2">
         {user ? (
           <>
-            <Button variant="ghost" onClick={() => navigate("/journal")} className="text-foreground hover:text-gold">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/journal")}
+              className="text-foreground hover:text-gold"
+            >
               <BookOpen className="mr-2 h-4 w-4" />
               Journal
             </Button>
-            <Button variant="ghost" onClick={handleSignOut} className="text-foreground hover:text-gold">
+            <Button
+              variant="ghost"
+              onClick={handleSignOut}
+              className="text-foreground hover:text-gold"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </Button>
           </>
         ) : (
-          <Button variant="ghost" onClick={() => navigate("/auth")} className="text-foreground hover:text-gold">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/auth")}
+            className="text-foreground hover:text-gold"
+          >
             <User className="mr-2 h-4 w-4" />
             Sign In
           </Button>
@@ -120,7 +140,9 @@ const Index = () => {
             <div className="w-12 h-[2px] bg-gradient-to-l from-transparent via-gold to-gold" />
           </div>
 
-          <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-2">Mystic Tarot</h1>
+          <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-2">
+            Mystic Tarot
+          </h1>
 
           <p className="text-muted-foreground text-lg max-w-md mx-auto">
             Discover divine guidance through the ancient art of tarot reading
@@ -145,7 +167,11 @@ const Index = () => {
             </div>
 
             <div className="mb-8">
-              <TarotCard data={undefined} isRevealed={false} onReveal={() => setIsRevealed(true)} />
+              <TarotCard
+                data={undefined}
+                isRevealed={false}
+                onReveal={() => setIsRevealed(true)}
+              />
             </div>
           </>
         ) : (
@@ -155,14 +181,22 @@ const Index = () => {
               <Button
                 variant={layoutType === "A" ? "default" : "outline"}
                 onClick={() => setLayoutType("A")}
-                className={layoutType === "A" ? "bg-mystic hover:bg-mystic/80" : "border-mystic/50"}
+                className={
+                  layoutType === "A"
+                    ? "bg-mystic hover:bg-mystic/80"
+                    : "border-mystic/50"
+                }
               >
                 Reflection Layout A
               </Button>
               <Button
                 variant={layoutType === "B" ? "default" : "outline"}
                 onClick={() => setLayoutType("B")}
-                className={layoutType === "B" ? "bg-mystic hover:bg-mystic/80" : "border-mystic/50"}
+                className={
+                  layoutType === "B"
+                    ? "bg-mystic hover:bg-mystic/80"
+                    : "border-mystic/50"
+                }
               >
                 Reflection Layout B
               </Button>
@@ -173,11 +207,19 @@ const Index = () => {
                 {/* Left: Card with full image */}
                 <div className="lg:col-span-1">
                   <div className="space-y-4">
-                    <h2 className="font-serif text-2xl text-foreground text-center">{hangedManData.name}</h2>
+                    <h2 className="font-serif text-2xl text-foreground text-center">
+                      {hangedManData.name}
+                    </h2>
                     <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
-                      <img src={hangedManData.imageUrl} alt={hangedManData.name} className="w-full h-auto" />
+                      <img
+                        src={hangedManData.imageUrl}
+                        alt={hangedManData.name}
+                        className="w-full h-auto"
+                      />
                     </div>
-                    <p className="text-muted-foreground text-center">{hangedManData.description}</p>
+                    <p className="text-muted-foreground text-center">
+                      {hangedManData.description}
+                    </p>
                   </div>
                 </div>
 
@@ -192,7 +234,8 @@ const Index = () => {
                         onSuccess={() => {
                           toast({
                             title: "Reflection Saved",
-                            description: "Your insight has been recorded in your journal",
+                            description:
+                              "Your insight has been recorded in your journal",
                           });
                         }}
                       />
@@ -208,9 +251,14 @@ const Index = () => {
                     </>
                   ) : (
                     <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
-                      <p className="text-muted-foreground">Sign in to save your reflections</p>
+                      <p className="text-muted-foreground">
+                        Sign in to save your reflections
+                      </p>
                       <div className="flex gap-4 justify-center">
-                        <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
+                        <Button
+                          onClick={() => navigate("/auth")}
+                          className="bg-mystic hover:bg-mystic/80"
+                        >
                           Sign In
                         </Button>
                         <Button
@@ -230,9 +278,15 @@ const Index = () => {
                 {/* Left: Card with full image */}
                 <div className="lg:col-span-1">
                   <div className="space-y-4">
-                    <h2 className="font-serif text-2xl text-foreground text-center">{hangedManData.name}</h2>
+                    <h2 className="font-serif text-2xl text-foreground text-center">
+                      {hangedManData.name}
+                    </h2>
                     <div className="rounded-lg overflow-hidden border border-mystic/30 shadow-lg">
-                      <img src={hangedManData.imageUrl} alt={hangedManData.name} className="w-full h-auto" />
+                      <img
+                        src={hangedManData.imageUrl}
+                        alt={hangedManData.name}
+                        className="w-full h-auto"
+                      />
                     </div>
                   </div>
                 </div>
@@ -258,7 +312,8 @@ const Index = () => {
                           onSuccess={() => {
                             toast({
                               title: "Reflection Saved",
-                              description: "Your insight has been recorded in your journal",
+                              description:
+                                "Your insight has been recorded in your journal",
                             });
                             handleReset();
                           }}
@@ -277,9 +332,14 @@ const Index = () => {
                     )
                   ) : (
                     <div className="text-center space-y-4 p-8 bg-card/50 rounded-lg border border-mystic/20">
-                      <p className="text-muted-foreground">Sign in to save your reflections</p>
+                      <p className="text-muted-foreground">
+                        Sign in to save your reflections
+                      </p>
                       <div className="flex gap-4 justify-center">
-                        <Button onClick={() => navigate("/auth")} className="bg-mystic hover:bg-mystic/80">
+                        <Button
+                          onClick={() => navigate("/auth")}
+                          className="bg-mystic hover:bg-mystic/80"
+                        >
                           Sign In
                         </Button>
                         <Button
@@ -300,8 +360,8 @@ const Index = () => {
 
         <div className="mt-16 text-center text-muted-foreground text-sm max-w-lg">
           <p className="italic">
-            "The cards reveal not what will be, but what might be—a glimpse into the infinite possibilities of your
-            journey."
+            "The cards reveal not what will be, but what might be—a glimpse into
+            the infinite possibilities of your journey."
           </p>
         </div>
       </div>

@@ -140,4 +140,20 @@ All colors MUST be HSL.
     animation: fade-in-word 0.8s ease-out forwards;
     opacity: 0;
   }
+
+  /* Slow pulse animation for sparkles icon */
+  @keyframes slow-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-slow-pulse {
+    animation: slow-pulse 2s ease-in-out infinite;
+  }
 }
