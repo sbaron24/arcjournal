@@ -1,0 +1,24 @@
+-- Update image paths to match the JSON file format
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-00.webp' WHERE number = 0;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-01.webp' WHERE number = 1;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-02.webp' WHERE number = 2;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-03.webp' WHERE number = 3;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-04.webp' WHERE number = 4;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-05.webp' WHERE number = 5;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-06.webp' WHERE number = 6;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-07.webp' WHERE number = 7;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-08.webp' WHERE number = 8;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-09.webp' WHERE number = 9;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-10.webp' WHERE number = 10;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-11.webp' WHERE number = 11;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-12.webp' WHERE number = 12;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-13.webp' WHERE number = 13;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-14.webp' WHERE number = 14;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-15.webp' WHERE number = 15;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-16.webp' WHERE number = 16;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-17.webp' WHERE number = 17;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-18.webp' WHERE number = 18;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-19.webp' WHERE number = 19;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-20.webp' WHERE number = 20;
+UPDATE public.tarot_cards SET img_src = '/tarot-cards/sm_RWSa-T-21.webp' WHERE number = 21;
+

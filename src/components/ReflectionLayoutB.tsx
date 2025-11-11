@@ -44,6 +44,7 @@ export const ReflectionLayoutB = ({
           question: question || null,
           reflection,
           generated_prompt: generatedPrompt || null,
+          highlights: highlights.length > 0 ? highlights : null,
         },
       ]);
 

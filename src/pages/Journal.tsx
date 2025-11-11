@@ -12,9 +12,11 @@ interface Reflection {
   id: string;
   reflection: string;
   created_at: string;
+  selected_keywords: string[] | null;
+  selected_shadow_keywords: string[] | null;
+  highlights: string[] | null;
   tarot_cards: {
     name: string;
-    keywords: string;
     element: string | null;
     planet_or_sign: string | null;
   };
@@ -47,9 +49,11 @@ const Journal = () => {
           id,
           reflection,
           created_at,
+          selected_keywords,
+          selected_shadow_keywords,
+          highlights,
           tarot_cards (
             name,
-            keywords,
             element,
             planet_or_sign
           )
@@ -162,10 +166,58 @@ const Journal = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Keywords</h4>
-                      <p className="text-sm text-foreground italic">{item.tarot_cards.keywords}</p>
-                    </div>
+                    {/* Resonance Section */}
+                    {(item.selected_keywords && item.selected_keywords.length > 0) ||
+                     (item.selected_shadow_keywords && item.selected_shadow_keywords.length > 0) ||
+                     (item.highlights && item.highlights.length > 0) ? (
+                      <div>
+                        <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Resonance</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {/* Layout A: Show selected keywords and shadow keywords */}
+                          {item.selected_keywords && item.selected_keywords.length > 0 && (
+                            <>
+                              {item.selected_keywords.map((keyword, index) => (
+                                <Badge
+                                  key={`keyword-${index}`}
+                                  variant="outline"
+                                  className="bg-gold/20 text-foreground border-gold/30"
+                                >
+                                  {keyword}
+                                </Badge>
+                              ))}
+                            </>
+                          )}
+                          {item.selected_shadow_keywords && item.selected_shadow_keywords.length > 0 && (
+                            <>
+                              {item.selected_shadow_keywords.map((keyword, index) => (
+                                <Badge
+                                  key={`shadow-${index}`}
+                                  variant="outline"
+                                  className="bg-gold/20 text-foreground border-gold/30"
+                                >
+                                  {keyword}
+                                </Badge>
+                              ))}
+                            </>
+                          )}
+                          {/* Layout B: Show highlights */}
+                          {item.highlights && item.highlights.length > 0 && (
+                            <>
+                              {item.highlights.map((highlight, index) => (
+                                <Badge
+                                  key={`highlight-${index}`}
+                                  variant="outline"
+                                  className="bg-gold/20 text-foreground border-gold/30"
+                                >
+                                  {highlight}
+                                </Badge>
+                              ))}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ) : null}
+                    
                     <div>
                       <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Your Reflection</h4>
                       <p className="text-foreground leading-relaxed whitespace-pre-wrap">

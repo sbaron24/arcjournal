@@ -34,9 +34,12 @@ export const CardTextDisplay = ({ cardName, cardText, existingHighlights = [], o
   };
 
   const renderTextWithHighlights = (text: string) => {
-    if (highlights.length === 0) return text;
+    // Convert literal \n to actual newlines for display
+    const normalizedText = text.replace(/\\n/g, '\n');
     
-    let result = text;
+    if (highlights.length === 0) return normalizedText;
+    
+    let result = normalizedText;
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
     
@@ -64,7 +67,7 @@ export const CardTextDisplay = ({ cardName, cardText, existingHighlights = [], o
       parts.push(result.substring(lastIndex));
     }
     
-    return parts.length > 0 ? parts : text;
+    return parts.length > 0 ? parts : normalizedText;
   };
 
   return (
@@ -84,7 +87,7 @@ export const CardTextDisplay = ({ cardName, cardText, existingHighlights = [], o
         >
           <div>
             <h3 className="font-serif text-lg text-gold mb-2">Essence</h3>
-            <p className="leading-relaxed">{renderTextWithHighlights(cardText.essence)}</p>
+            <p className="leading-relaxed whitespace-pre-line">{renderTextWithHighlights(cardText.essence)}</p>
           </div>
 
           <div>
@@ -94,7 +97,7 @@ export const CardTextDisplay = ({ cardName, cardText, existingHighlights = [], o
 
           <div>
             <h3 className="font-serif text-lg text-gold mb-2">Shadows & Challenges</h3>
-            <p className="leading-relaxed">{renderTextWithHighlights(cardText.shadowsChallenges)}</p>
+            <p className="leading-relaxed whitespace-pre-line">{renderTextWithHighlights(cardText.shadowsChallenges)}</p>
           </div>
         </div>
       </div>
