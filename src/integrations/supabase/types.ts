@@ -75,6 +75,7 @@ export type Database = {
           archetypal_theme: string
           created_at: string
           element: string | null
+          essence: string | null
           id: string
           img_src: string
           keywords: string
@@ -82,12 +83,15 @@ export type Database = {
           number: number
           planet_or_sign: string | null
           shadow_keywords: string
+          shadows_challenges: string | null
+          symbolic_language: string | null
           symbolic_pair: string
         }
         Insert: {
           archetypal_theme: string
           created_at?: string
           element?: string | null
+          essence?: string | null
           id?: string
           img_src: string
           keywords: string
@@ -95,12 +99,15 @@ export type Database = {
           number: number
           planet_or_sign?: string | null
           shadow_keywords: string
+          shadows_challenges?: string | null
+          symbolic_language?: string | null
           symbolic_pair: string
         }
         Update: {
           archetypal_theme?: string
           created_at?: string
           element?: string | null
+          essence?: string | null
           id?: string
           img_src?: string
           keywords?: string
@@ -108,6 +115,8 @@ export type Database = {
           number?: number
           planet_or_sign?: string | null
           shadow_keywords?: string
+          shadows_challenges?: string | null
+          symbolic_language?: string | null
           symbolic_pair?: string
         }
         Relationships: []
