@@ -1,23 +1,32 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { Sparkles } from 'lucide-react';
-import { z } from 'zod';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { Sparkles } from "lucide-react";
+import { z } from "zod";
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Invalid email address" }).max(255),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }).max(100),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" })
+    .max(100),
 });
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
@@ -25,18 +34,18 @@ const Auth = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate("/");
     }
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const validated = authSchema.parse({ email, password });
       setIsLoading(true);
 
-      const { error } = isLogin 
+      const { error } = isLogin
         ? await signIn(validated.email, validated.password)
         : await signUp(validated.email, validated.password);
 
@@ -70,7 +79,10 @@ const Auth = () => {
       <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-card/50" />
       <div className="fixed inset-0 opacity-30">
         <div className="absolute top-20 left-20 w-64 h-64 bg-mystic/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-celestial/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+        <div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-celestial/20 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       <div className="relative z-10 w-full max-w-md px-4">
@@ -84,7 +96,9 @@ const Auth = () => {
             {isLogin ? "Welcome Back" : "Begin Your Journey"}
           </h1>
           <p className="text-muted-foreground">
-            {isLogin ? "Sign in to access your reflections" : "Create an account to save your tarot journey"}
+            {isLogin
+              ? "Sign in to access your reflections"
+              : "Create an account to save your tarot journey"}
           </p>
         </div>
 
@@ -92,7 +106,9 @@ const Auth = () => {
           <CardHeader>
             <CardTitle>{isLogin ? "Sign In" : "Sign Up"}</CardTitle>
             <CardDescription>
-              {isLogin ? "Enter your credentials to continue" : "Create your account to get started"}
+              {isLogin
+                ? "Enter your credentials to continue"
+                : "Create your account to get started"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -122,11 +138,7 @@ const Auth = () => {
                   maxLength={100}
                 />
               </div>
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
               </Button>
             </form>
@@ -137,7 +149,9 @@ const Auth = () => {
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-mystic hover:text-gold transition-colors"
               >
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                {isLogin
+                  ? "Don't have an account? Sign up"
+                  : "Already have an account? Sign in"}
               </button>
             </div>
           </CardContent>

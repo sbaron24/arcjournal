@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RequestBody {
   cardName?: string;
@@ -84,23 +85,39 @@ export const ReflectionPrompt = ({
     }
 
     try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_SUPABASE_URL
-        }/functions/v1/generate-tarot-prompt`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${
-              import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-            }`,
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const functionUrl = `${supabaseUrl}/functions/v1/generate-tarot-prompt`;
 
-      if (!response.ok) throw new Error("Failed to generate prompt");
+      // Get the user's session token
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to generate prompts",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(functionUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, // Required: authenticates to Supabase
+          Authorization: `Bearer ${session.access_token}`, // Required: identifies the user
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      // Log the response status
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error("Failed to generate prompt");
+      }
 
       const reader = response.body?.getReader();
       if (!reader) throw new Error("Response body is not readable");

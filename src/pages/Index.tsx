@@ -72,7 +72,7 @@ const Index = () => {
       // Randomly select a card
       const randomIndex = Math.floor(Math.random() * cards.length);
       const selectedCard = cards[randomIndex];
-      console.log("IMAGE: ", selectedCard.img_src);
+
       // Map database fields to card data structure
       const card = selectedCard as any; // Type assertion needed until types are regenerated
       const mappedCardData: CardData = {

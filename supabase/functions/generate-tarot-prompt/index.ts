@@ -2,7 +2,6 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -55,7 +54,7 @@ Keep the tone mystical but grounded. Focus specifically on what the user selecte
       selectedElement ||
       selectedPlanetSign
     ) {
-      const selectedThemes = [];
+      const selectedThemes: string[] = [];
       if (selectedKeywords?.length)
         selectedThemes.push(`Keywords: ${selectedKeywords.join(", ")}`);
       if (selectedShadowKeywords?.length)
@@ -108,8 +107,6 @@ Create a personalized reflection prompt that connects what resonated with the us
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error("OpenAI API error:", response.status, errorData);
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 

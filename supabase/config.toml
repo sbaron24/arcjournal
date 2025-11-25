@@ -1,1 +1,2 @@
-project_id = "qijyrvkowqggcxktaczb"
+[functions.generate-tarot-prompt]
+verify_jwt = false
